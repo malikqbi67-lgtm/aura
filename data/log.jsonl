@@ -12,3 +12,8 @@
 {"time": "2026-10-31 20:13:24", "decision": "TURN ON AC", "result": "BLOCKED", "sensors": {"temperature": 35, "humidity": 65, "light": 315, "motion": true}}
 {"time": "2026-10-31 20:13:27", "decision": "TURN ON AC", "result": "BLOCKED", "sensors": {"temperature": 40, "humidity": 49, "light": 71, "motion": true}}
 {"time": "2026-10-31 20:13:27", "decision": "TURN ON LIGHT", "result": "BLOCKED", "sensors": {"temperature": 40, "humidity": 49, "light": 71, "motion": true}}
+{"time": "2026-10-31 20:25:36", "decision": "TURN ON AC", "result": "OK", "sensors": {"temperature": 31, "humidity": 64, "light": 650, "motion": true}}
+{"time": "2026-10-31 20:25:39", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 34, "humidity": 76, "light": 0, "motion": false}}
+{"time": "2026-10-31 20:25:45", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 19, "humidity": 34, "light": 391, "motion": true}}
+{"time": "2026-10-31 20:25:48", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 21, "humidity": 61, "light": 564, "motion": true}}
+{"time": "2026-10-31 20:25:51", "decision": "TURN OFF AC", "result": "OK", "sensors": {"temperature": 25, "humidity": 83, "light": 764, "motion": false}}

@@ -1,5 +1,6 @@
 import random
 import time
+import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
 
@@ -79,8 +80,23 @@ room = {
     "devices": {"ac": False, "light": False}
 }
 
+def on_message(client, userdata, msg):
+    room["sensors"] = json.loads(msg.payload.decode())
+
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+client.on_message = on_message
+client.connect("localhost", 1883)
+client.subscribe("aura/room1/sensors")
+client.loop_start()
+print("AURA listening on aura/room1/sensors ...")
+
+last_seen = None
+
 while True:
-    room["sensors"] = read_sensors()
+    if not room["sensors"] or room["sensors"] == last_seen:
+        time.sleep(1)
+        continue
+    last_seen = dict(room["sensors"])
 
     print("==============================")
     print("Sensors:", room["sensors"])
