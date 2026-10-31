@@ -1,6 +1,9 @@
 import random
 import time
 
+COOLDOWN = 15
+last_change = {"ac": 0, "light": 0}
+
 def read_sensors():
     return {
         "temperature": random.randint(18, 40),
@@ -33,6 +36,12 @@ def decide(room):
 def execute(room, decisions):
     devices = room["devices"]
     for d in decisions:
+        device = "ac" if "AC" in d else "light"
+        if time.time() - last_change[device] < COOLDOWN:
+            print("BLOCKED (cooldown):", d)
+            continue
+        last_change[device] = time.time()
+
         if d == "TURN ON AC":
             devices["ac"] = True
         elif d == "TURN OFF AC":
