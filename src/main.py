@@ -47,7 +47,6 @@ def log_event(decision, result, sensors):
         f.write(json.dumps(event) + "\n")
 
 def execute(room, decisions):
-    devices = room["devices"]
     for d in decisions:
         device = "ac" if "AC" in d else "light"
         if time.time() - last_change[device] < COOLDOWN:
@@ -56,23 +55,10 @@ def execute(room, decisions):
             continue
         last_change[device] = time.time()
 
-        if d == "TURN ON AC":
-            devices["ac"] = True
-        elif d == "TURN OFF AC":
-            devices["ac"] = False
-        elif d == "TURN ON LIGHT":
-            devices["light"] = True
-        elif d == "TURN OFF LIGHT":
-            devices["light"] = False
-
-        ok = (
-            (d == "TURN ON AC" and devices["ac"])
-            or (d == "TURN OFF AC" and not devices["ac"])
-            or (d == "TURN ON LIGHT" and devices["light"])
-            or (d == "TURN OFF LIGHT" and not devices["light"])
-        )
-        print("OK:" if ok else "FAILED:", d)
-        log_event(d, "OK" if ok else "FAILED", room["sensors"])
+        state = "TURN ON" in d
+        client.publish("aura/room1/commands", json.dumps({"device": device, "state": state}))
+        print("SENT COMMAND:", d)
+        log_event(d, "SENT", room["sensors"])
 
 room = {
     "name": "Living Room",
@@ -81,12 +67,18 @@ room = {
 }
 
 def on_message(client, userdata, msg):
-    room["sensors"] = json.loads(msg.payload.decode())
+    data = json.loads(msg.payload.decode())
+    if msg.topic == "aura/room1/status":
+        room["devices"][data["device"]] = data["state"]
+        print("CONFIRMED by device:", data)
+    else:
+        room["sensors"] = data
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_message = on_message
 client.connect("localhost", 1883)
 client.subscribe("aura/room1/sensors")
+client.subscribe("aura/room1/status")
 client.loop_start()
 print("AURA listening on aura/room1/sensors ...")
 
