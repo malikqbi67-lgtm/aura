@@ -1,13 +1,13 @@
 import random
+import time
 
 def read_sensors():
-    sensors = {
+    return {
         "temperature": random.randint(18, 40),
         "humidity": random.randint(30, 90),
         "light": random.randint(0, 800),
         "motion": random.choice([True, False])
     }
-    return sensors
 
 def decide(room):
     sensors = room["sensors"]
@@ -16,35 +16,56 @@ def decide(room):
 
     if sensors["temperature"] > 28 and sensors["motion"] and not devices["ac"]:
         decisions.append("TURN ON AC")
-
     if not sensors["motion"] and devices["ac"]:
         decisions.append("TURN OFF AC")
-
     if sensors["light"] < 100 and sensors["motion"] and not devices["light"]:
         decisions.append("TURN ON LIGHT")
-
     if not sensors["motion"] and devices["light"]:
+        decisions.append("TURN OFF LIGHT")
+
+    if sensors["temperature"] < 24 and devices["ac"] and "TURN OFF AC" not in decisions:
+        decisions.append("TURN OFF AC")
+    if sensors["light"] > 300 and devices["light"] and "TURN OFF LIGHT" not in decisions:
         decisions.append("TURN OFF LIGHT")
 
     return decisions
 
+def execute(room, decisions):
+    devices = room["devices"]
+    for d in decisions:
+        if d == "TURN ON AC":
+            devices["ac"] = True
+        elif d == "TURN OFF AC":
+            devices["ac"] = False
+        elif d == "TURN ON LIGHT":
+            devices["light"] = True
+        elif d == "TURN OFF LIGHT":
+            devices["light"] = False
+
+        ok = (
+            (d == "TURN ON AC" and devices["ac"])
+            or (d == "TURN OFF AC" and not devices["ac"])
+            or (d == "TURN ON LIGHT" and devices["light"])
+            or (d == "TURN OFF LIGHT" and not devices["light"])
+        )
+        print("OK:" if ok else "FAILED:", d)
+
 room = {
     "name": "Living Room",
-    "sensors": read_sensors(),
-    "devices": {
-        "ac": False,
-        "light": False
-    }
+    "sensors": {},
+    "devices": {"ac": False, "light": False}
 }
 
-print("Room:", room["name"])
-print("Sensors:", room["sensors"])
-print("Devices:", room["devices"])
+while True:
+    room["sensors"] = read_sensors()
 
-decisions = decide(room)
+    print("==============================")
+    print("Sensors:", room["sensors"])
+    print("Devices:", room["devices"])
 
-print("--- AURA Decisions ---")
-if len(decisions) == 0:
-    print("No action needed")
-for d in decisions:
-    print(d)
+    decisions = decide(room)
+    if len(decisions) == 0:
+        print("No action needed")
+    execute(room, decisions)
+
+    time.sleep(3)
