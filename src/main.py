@@ -1,5 +1,7 @@
 import random
 import time
+import json
+from datetime import datetime
 
 COOLDOWN = 15
 last_change = {"ac": 0, "light": 0}
@@ -33,12 +35,23 @@ def decide(room):
 
     return decisions
 
+def log_event(decision, result, sensors):
+    event = {
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "decision": decision,
+        "result": result,
+        "sensors": sensors
+    }
+    with open("data/log.jsonl", "a") as f:
+        f.write(json.dumps(event) + "\n")
+
 def execute(room, decisions):
     devices = room["devices"]
     for d in decisions:
         device = "ac" if "AC" in d else "light"
         if time.time() - last_change[device] < COOLDOWN:
             print("BLOCKED (cooldown):", d)
+            log_event(d, "BLOCKED", room["sensors"])
             continue
         last_change[device] = time.time()
 
@@ -58,6 +71,7 @@ def execute(room, decisions):
             or (d == "TURN OFF LIGHT" and not devices["light"])
         )
         print("OK:" if ok else "FAILED:", d)
+        log_event(d, "OK" if ok else "FAILED", room["sensors"])
 
 room = {
     "name": "Living Room",
