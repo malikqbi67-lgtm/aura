@@ -1,5 +1,6 @@
 import random
 import time
+from ai import ask_ai
 import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
@@ -68,6 +69,13 @@ room = {
 
 def on_message(client, userdata, msg):
     data = json.loads(msg.payload.decode())
+    if msg.topic == "aura/room1/user":
+        text = data["text"]
+        print("USER SAYS:", text)
+        result = ask_ai(text, room["sensors"], room["devices"])
+        print("AI SUGGESTS:", result["actions"], "|", result.get("reason", ""))
+        execute(room, result["actions"])
+        return
     if msg.topic == "aura/room1/status":
         room["devices"][data["device"]] = data["state"]
         print("CONFIRMED by device:", data)
@@ -78,6 +86,7 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_message = on_message
 client.connect("localhost", 1883)
 client.subscribe("aura/room1/sensors")
+client.subscribe("aura/room1/user")
 client.subscribe("aura/room1/status")
 client.loop_start()
 print("AURA listening on aura/room1/sensors ...")
