@@ -7,7 +7,7 @@ ALLOWED = ["TURN ON AC", "TURN OFF AC", "TURN ON LIGHT", "TURN OFF LIGHT"]
 def ask_ai(user_text, sensors, devices):
     prompt = (
         "You control a smart room that has ONLY an AC and a light. "
-        "Reply with JSON only, no extra text.\n"
+        "Rules: the light only turns fully on or off (no dimming). If the user wants to sleep, turn the light OFF. Only suggest actions that change the current device state. Reply with JSON only, no extra text.\n"
         'Format: {"actions": [...], "reason": "short explanation in Arabic"}\n'
         "Allowed actions: " + json.dumps(ALLOWED) + "\n"
         "Sensors: " + json.dumps(sensors) + "\n"
@@ -31,9 +31,17 @@ def ask_ai(user_text, sensors, devices):
     result = json.loads(answer)
     # safety: keep only allowed actions
     result["actions"] = [a for a in result.get("actions", []) if a in ALLOWED]
+    # safety: drop actions that would not change anything
+    useful = []
+    for a in result["actions"]:
+        device = "ac" if "AC" in a else "light"
+        wanted = "TURN ON" in a
+        if devices[device] != wanted:
+            useful.append(a)
+    result["actions"] = useful
     return result
 
 if __name__ == "__main__":
     sensors = {"temperature": 33, "humidity": 60, "light": 400, "motion": True}
     devices = {"ac": False, "light": False}
-    print(ask_ai("الجو حار وأريد أن أنام", sensors, devices))
+    print(ask_ai("الجو حار جداً، برّد الغرفة", sensors, devices))
