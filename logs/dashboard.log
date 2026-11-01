@@ -1,0 +1,14 @@
+
+> dashboard@0.1.0 dev
+> next dev
+
+▲ Next.js 16.4.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.110.11:3000
+✓ Ready in 131ms
+✓ Running next.config.ts took 14ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+ GET / 200 in 121ms (next.js: 41ms, application-code: 80ms)
+[?25h
