@@ -46,3 +46,14 @@ class UserMessage(BaseModel):
 def user(msg: UserMessage):
     mq.publish("aura/room1/user", json.dumps({"text": msg.text}))
     return {"sent": msg.text}
+
+class Command(BaseModel):
+    device: str
+    state: bool
+
+@app.post("/command")
+def command(cmd: Command):
+    if cmd.device not in ("ac", "light"):
+        return {"error": "unknown device"}
+    mq.publish("aura/room1/commands", json.dumps({"device": cmd.device, "state": cmd.state}))
+    return {"sent": cmd.device, "state": cmd.state}

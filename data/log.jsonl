@@ -108,3 +108,13 @@
 {"time": "2026-11-01 16:37:08", "decision": "TURN OFF LIGHT", "result": "BLOCKED", "sensors": {"temperature": 31, "humidity": 63, "light": 424, "motion": true}}
 {"time": "2026-11-01 16:37:11", "decision": "TURN OFF LIGHT", "result": "BLOCKED", "sensors": {"temperature": 21, "humidity": 66, "light": 351, "motion": false}}
 {"time": "2026-11-01 16:37:14", "decision": "TURN OFF LIGHT", "result": "SENT", "sensors": {"temperature": 28, "humidity": 48, "light": 394, "motion": true}}
+{"time": "2026-11-01 16:43:07", "decision": "TURN ON AC", "result": "SENT", "sensors": {"temperature": 39, "humidity": 64, "light": 491, "motion": true}}
+{"time": "2026-11-01 16:43:10", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 35, "humidity": 90, "light": 17, "motion": false}}
+{"time": "2026-11-01 16:43:16", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 38, "humidity": 66, "light": 720, "motion": false}}
+{"time": "2026-11-01 16:43:22", "decision": "TURN OFF LIGHT", "result": "SENT", "sensors": {"temperature": 19, "humidity": 65, "light": 662, "motion": false}}
+{"time": "2026-11-01 16:43:25", "decision": "TURN OFF LIGHT", "result": "BLOCKED", "sensors": {"temperature": 20, "humidity": 74, "light": 261, "motion": false}}
+{"time": "2026-11-01 16:43:28", "decision": "TURN ON AC", "result": "SENT", "sensors": {"temperature": 32, "humidity": 61, "light": 124, "motion": true}}
+{"time": "2026-11-01 16:43:31", "decision": "TURN OFF AC", "result": "BLOCKED", "sensors": {"temperature": 21, "humidity": 78, "light": 103, "motion": false}}
+{"time": "2026-11-01 16:43:40", "decision": "TURN ON AC", "result": "BLOCKED", "sensors": {"temperature": 34, "humidity": 32, "light": 102, "motion": true}}
+{"time": "2026-11-01 16:43:52", "decision": "TURN OFF LIGHT", "result": "SENT", "sensors": {"temperature": 33, "humidity": 79, "light": 324, "motion": true}}
+{"time": "2026-11-01 16:43:58", "decision": "TURN OFF AC", "result": "SENT", "sensors": {"temperature": 31, "humidity": 63, "light": 428, "motion": false}}

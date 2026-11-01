@@ -24,11 +24,27 @@ function Card({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Device({ name, on }: { name: string; on: boolean }) {
+async function toggle(device: string, state: boolean) {
+  await fetch(API + "/command", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ device, state }),
+  });
+}
+
+function Device({ name, id, on }: { name: string; id: string; on: boolean }) {
   return (
     <div className={`rounded-2xl border p-5 ${on ? "border-emerald-500/50 bg-emerald-500/10" : "border-slate-800 bg-slate-900/60"}`}>
       <p className="text-sm text-slate-400">{name}</p>
-      <p className={`mt-2 text-2xl font-bold ${on ? "text-emerald-400" : "text-slate-500"}`}>{on ? "ON" : "OFF"}</p>
+      <div className="mt-2 flex items-center justify-between">
+        <p className={`text-2xl font-bold ${on ? "text-emerald-400" : "text-slate-500"}`}>{on ? "ON" : "OFF"}</p>
+        <button
+          onClick={() => toggle(id, !on)}
+          className="rounded-xl bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400"
+        >
+          Turn {on ? "OFF" : "ON"}
+        </button>
+      </div>
     </div>
   );
 }
@@ -95,8 +111,8 @@ export default function Home() {
         </section>
 
         <section className="grid grid-cols-2 gap-4">
-          <Device name="❄️ Air Conditioner" on={!!state?.ac} />
-          <Device name="💡 Light" on={!!state?.light_on} />
+          <Device name="❄️ Air Conditioner" id="ac" on={!!state?.ac} />
+          <Device name="💡 Light" id="light" on={!!state?.light_on} />
         </section>
 
         <section className="grid gap-6 lg:grid-cols-3">
